@@ -55,8 +55,15 @@ if (Meteor.isClient) {
 			// here is an example of how to get the url out of the form:
 			var url = event.target.url.value;
 			console.log("The url they entered is: "+url);
-			
-			//  put your website saving code in here!	
+
+			// Add site to collection
+			// Validation is done server side
+			Websites.insert({
+				title: event.target.title.value,
+				url:event.target.url.value,
+				description:event.target.description.value,
+				createdOn:new Date()
+			});
 
 			return false;// stop the form submit from reloading the page
 
@@ -96,5 +103,22 @@ if (Meteor.isServer) {
     		createdOn:new Date()
     	});
     }
+  });
+
+  Websites.allow({
+	insert: function (userId, doc) {
+		if (Meteor.user()) { // user is logged in ...
+			if (doc.url.length > 0 && doc.description.length > 0 && doc.title.length > 0) { // simple validation ( should check string formats )
+				console.log("Valid site - will add to collection");
+				return true;
+			} else {
+				console.log("Site url, title or description are empty");
+				return  false;
+			}
+		} else {
+			console.log("User is not logged in");
+			return false;
+		}
+	}
   });
 }
