@@ -4,7 +4,14 @@ if (Meteor.isClient) {
 
 	Router.route('/', function () {
 		this.layout('ApplicationLayout');
-		this.render('landingPageContent', { to : 'maincontent'});
+		this.render('landing_page_content', { to : 'maincontent'});
+	});
+
+	Router.route('/website/:_id', function(data) {
+		this.layout('ApplicationLayout', {
+			data: function () { return Websites.findOne({_id: this.params._id}) }
+		});
+		this.render('website_detail', { to : 'maincontent'});
 	});
 
 	Accounts.ui.config({

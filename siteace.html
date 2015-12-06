@@ -1,22 +1,22 @@
 <template name="ApplicationLayout">
 <head>
-{{ > headSection }}
+{{ > head_section }}
 </head>
 
 <body>
-{{ > navBar }}
+{{ > nav_bar }}
 
 {{> yield "maincontent"}}
 </body>
 </template>
 
-<template name="headSection">
+<template name="head_section">
 <head>
   <title>Site Leaderboard</title>
 </head>
 </template>
 
-<template name="navBar">
+<template name="nav_bar">
 <!-- navbar  - you will be putting the login functions here -->
 <nav class="navbar navbar-default">
   <div class="container">
@@ -32,7 +32,7 @@
 </nav>
 </template>
 
-<template name="landingPageContent">
+<template name="landing_page_content">
 <div class="container">
 	{{> website_form}}
 	{{> website_list}}
@@ -81,10 +81,30 @@
 			<a href="#" class="btn btn-default js-downvote"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span></a>
 		</li>
 		<li>{{votes}} votes</li>
-		<li><a href="{{url}}">{{title}}</a></li>
+		<li><a href="{{url}}" target="_blank"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span> {{title}}</a> <a href="/website/{{_id}}"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> More Info</a></li>
 		<li>{{description}}</li>
 		<li><span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{formatDate createdOn}}</li>
 	</ul>
-	<!-- you will be putting your up and down vote buttons in here! -->
 </li>
+<!-- you will be putting your up and down vote buttons in here! -->
+</template>
+
+<!-- template that displays individual website entries -->
+<template name="website_detail">
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<h2><a href="{{url}}">{{title}}</a></h2>
+			<h4>{{votes}} votes</h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">{{description}}</div>
+		<div class="col-md-6"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{formatDate createdOn}}</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12"><a class="btn btn-primary" href="/">Go Back</a></div>
+	</div>
+</div>
+<!-- you will be putting your up and down vote buttons in here! -->
 </template>
