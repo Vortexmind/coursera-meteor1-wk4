@@ -1,10 +1,11 @@
 Websites = new Mongo.Collection("websites");
 
-Accounts.ui.config({
-  passwordSignupFields: "USERNAME_ONLY"
-});
-
 if (Meteor.isClient) {
+
+	Accounts.ui.config({
+		passwordSignupFields: "USERNAME_AND_EMAIL"
+	});
+
 
 	/////
 	// template helpers 
