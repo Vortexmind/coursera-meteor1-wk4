@@ -2,6 +2,11 @@ Websites = new Mongo.Collection("websites");
 
 if (Meteor.isClient) {
 
+	Router.route('/', function () {
+		this.layout('ApplicationLayout');
+		this.render('landingPageContent', { to : 'maincontent'});
+	});
+
 	Accounts.ui.config({
 		passwordSignupFields: "USERNAME_AND_EMAIL"
 	});
