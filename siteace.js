@@ -18,6 +18,11 @@ if (Meteor.isClient) {
 		}
 	});
 
+	// Pretty dates using momentjs
+	Template.registerHelper('formatDate', function(date) {
+		return moment(date).startOf('second').fromNow();
+	});
+
 
 	/////
 	// template events 
