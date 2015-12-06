@@ -89,7 +89,24 @@ if (Meteor.isClient) {
 			});
 
 			return false;// stop the form submit from reloading the page
+		}
+	});
 
+	Template.website_comment_form.events({
+		"submit .js-add-website-comment":function(event) {
+
+			var comment = event.target.website_comment.value;
+			var website_id = this._id;
+
+			Websites.update({_id: website_id }, { $push : { comments : {
+					author : Meteor.user().username,
+					comment : comment,
+					createdOn : new Date()
+				}
+			}});
+
+			event.target.website_comment.value = ''; // clear form value
+			return false;// stop the form submit from reloading the page
 		}
 	});
 }
@@ -106,28 +123,32 @@ if (Meteor.isServer) {
     		url:"http://www.gold.ac.uk/computing/", 
     		description:"This is where this course was developed.", 
     		createdOn:new Date(),
-    		votes : 0
+			votes : 0,
+			comments : []
     	});
     	 Websites.insert({
     		title:"University of London", 
     		url:"http://www.londoninternational.ac.uk/courses/undergraduate/goldsmiths/bsc-creative-computing-bsc-diploma-work-entry-route", 
     		description:"University of London International Programme.", 
     		createdOn:new Date(),
-    		votes : 0
+			votes : 0,
+			comments : []
     	});
     	 Websites.insert({
     		title:"Coursera", 
     		url:"http://www.coursera.org", 
     		description:"Universal access to the world’s best education.", 
     		createdOn:new Date(),
-    		votes : 0
+			votes : 0,
+			comments : []
     	});
     	Websites.insert({
     		title:"Google", 
     		url:"http://www.google.com", 
     		description:"Popular search engine.", 
     		createdOn:new Date(),
-    		votes : 0
+			votes : 0,
+			comments : []
     	});
     }
   });
