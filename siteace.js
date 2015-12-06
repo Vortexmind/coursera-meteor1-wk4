@@ -29,8 +29,11 @@ if (Meteor.isClient) {
 			// (this is the data context for the template)
 			var website_id = this._id;
 			console.log("Up voting website with id "+website_id);
-			// put the code in here to add a vote to a website!
 
+			Websites.update({_id : website_id },{
+				$inc :  { 'votes' : 1 }
+			});
+			
 			return false;// prevent the button from reloading the page
 		}, 
 		"click .js-downvote":function(event){
@@ -40,7 +43,9 @@ if (Meteor.isClient) {
 			var website_id = this._id;
 			console.log("Down voting website with id "+website_id);
 
-			// put the code in here to remove a vote from a website!
+			Websites.update({_id : website_id },{
+				$inc : { 'votes' : -1 }
+			});
 
 			return false;// prevent the button from reloading the page
 		}
@@ -62,7 +67,8 @@ if (Meteor.isClient) {
 				title: event.target.title.value,
 				url:event.target.url.value,
 				description:event.target.description.value,
-				createdOn:new Date()
+				createdOn:new Date(),
+				votes: 0
 			});
 
 			return false;// stop the form submit from reloading the page
@@ -82,25 +88,29 @@ if (Meteor.isServer) {
     		title:"Goldsmiths Computing Department", 
     		url:"http://www.gold.ac.uk/computing/", 
     		description:"This is where this course was developed.", 
-    		createdOn:new Date()
+    		createdOn:new Date(),
+    		votes : 0
     	});
     	 Websites.insert({
     		title:"University of London", 
     		url:"http://www.londoninternational.ac.uk/courses/undergraduate/goldsmiths/bsc-creative-computing-bsc-diploma-work-entry-route", 
     		description:"University of London International Programme.", 
-    		createdOn:new Date()
+    		createdOn:new Date(),
+    		votes : 0
     	});
     	 Websites.insert({
     		title:"Coursera", 
     		url:"http://www.coursera.org", 
     		description:"Universal access to the world’s best education.", 
-    		createdOn:new Date()
+    		createdOn:new Date(),
+    		votes : 0
     	});
     	Websites.insert({
     		title:"Google", 
     		url:"http://www.google.com", 
     		description:"Popular search engine.", 
-    		createdOn:new Date()
+    		createdOn:new Date(),
+    		votes : 0
     	});
     }
   });
@@ -109,7 +119,7 @@ if (Meteor.isServer) {
 	insert: function (userId, doc) {
 		if (Meteor.user()) { // user is logged in ...
 			if (doc.url.length > 0 && doc.description.length > 0 && doc.title.length > 0) { // simple validation ( should check string formats )
-				console.log("Valid site - will add to collection");
+				console.log("Valid site - will add website to collection");
 				return true;
 			} else {
 				console.log("Site url, title or description are empty");
@@ -119,6 +129,12 @@ if (Meteor.isServer) {
 			console.log("User is not logged in");
 			return false;
 		}
-	}
+	},
+	update : function (userId ,doc) {
+		if(Meteor.user()){ // user is logged in
+			console.log("Allowing website update");
+			return true;
+		}
+	} 
   });
 }
