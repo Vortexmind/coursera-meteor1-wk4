@@ -33,10 +33,10 @@
 </template>
 
 <template name="landing_page_content">
-<div class="container">
-	{{> website_form}}
-	{{> website_list}}
-</div>
+
+{{> website_form}}
+{{> website_list}}
+
 </template>
 
 <template name="website_comment_form">
@@ -52,6 +52,7 @@
 </template>
 
 <template name="website_form">
+<div class="container">
 	<a class="btn btn-default js-toggle-website-form" href="#">
   		<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 	</a>
@@ -64,31 +65,42 @@
 		  <button type="submit" class="btn btn-default js-submit-site">Submit</button>
 		</form>
 	</div>
+</div>
 </template>
 
 <!-- template that displays several website items -->
 <template name="website_list">
-	<ol>
-	{{#each websites}}
+<div class="container">
+	<h2>Site Leaderboard</h2>
+<table class="table table-striped">
+<thead>
+<tr>
+	<th>#</th>
+	<th>Votes</th>
+	<th>Site</th>
+	<th>Created</th>
+</tr>
+</thead>
+<tbody>
+{{#each websites}}
 	{{>website_item}}
-	{{/each}}
-	</ol>
+{{/each}}
+</tbody>
+</table>
+</div>
 </template>
 
 <!-- template that displays individual website entries -->
 <template name="website_item">
-<li>
-	<ul class="list-inline">
-		<li>
-			<a href="#" class="btn btn-default js-upvote"><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a>
-			<a href="#" class="btn btn-default js-downvote"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span></a>
-		</li>
-		<li>{{votes}} votes</li>
-		<li><a href="{{url}}" target="_blank"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span> {{title}}</a> <a href="/website/{{_id}}"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> More Info</a></li>
-		<li>{{description}}</li>
-		<li><span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{formatDate createdOn}}</li>
-	</ul>
-</li>
+<tr>
+	<td>
+		<a href="#" class="btn btn-default js-upvote"><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a>
+		<a href="#" class="btn btn-default js-downvote"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span></a>
+	</td>
+	<td>{{votes}} votes</td>
+	<td><a href="{{url}}" target="_blank"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span> {{title}}</a><p><a href="/website/{{_id}}"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> More Info</a></p></td>
+	<td><span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{formatDate createdOn}}</td>
+</tr>
 <!-- you will be putting your up and down vote buttons in here! -->
 </template>
 
