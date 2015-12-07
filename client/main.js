@@ -1,6 +1,3 @@
-Websites = new Mongo.Collection("websites");
-
-if (Meteor.isClient) {
 
 	Router.route('/', function () {
 		this.layout('ApplicationLayout');
@@ -78,15 +75,28 @@ if (Meteor.isClient) {
 			var url = event.target.url.value;
 			console.log("The url they entered is: "+url);
 
-			// Add site to collection
-			// Validation is done server side
-			Websites.insert({
-				title: event.target.title.value,
-				url:event.target.url.value,
-				description:event.target.description.value,
-				createdOn:new Date(),
-				votes: 0
-			});
+			Meteor.call("scrapeSite",url,function(err,result) {
+
+				if(!err) {
+					// Pull title and description from the scraped content
+					// or populate with 'N/A'
+					var title = result.title || 'N/A';
+					var description = result.description || 'N/A';
+
+					// Add site to collection
+					// Validation is done server side
+					Websites.insert({
+						url:url,
+						title: title,
+						description:description,
+						createdOn:new Date(),
+						votes: 0
+					});
+				} else {
+					console.log("Error inserting site");
+				} 
+			
+			}); 
 
 			return false;// stop the form submit from reloading the page
 		}
@@ -109,70 +119,3 @@ if (Meteor.isClient) {
 			return false;// stop the form submit from reloading the page
 		}
 	});
-}
-
-
-if (Meteor.isServer) {
-	// start up function that creates entries in the Websites databases.
-  Meteor.startup(function () {
-    // code to run on server at startup
-    if (!Websites.findOne()){
-    	console.log("No websites yet. Creating starter data.");
-    	  Websites.insert({
-    		title:"Goldsmiths Computing Department", 
-    		url:"http://www.gold.ac.uk/computing/", 
-    		description:"This is where this course was developed.", 
-    		createdOn:new Date(),
-			votes : 0,
-			comments : []
-    	});
-    	 Websites.insert({
-    		title:"University of London", 
-    		url:"http://www.londoninternational.ac.uk/courses/undergraduate/goldsmiths/bsc-creative-computing-bsc-diploma-work-entry-route", 
-    		description:"University of London International Programme.", 
-    		createdOn:new Date(),
-			votes : 0,
-			comments : []
-    	});
-    	 Websites.insert({
-    		title:"Coursera", 
-    		url:"http://www.coursera.org", 
-    		description:"Universal access to the world’s best education.", 
-    		createdOn:new Date(),
-			votes : 0,
-			comments : []
-    	});
-    	Websites.insert({
-    		title:"Google", 
-    		url:"http://www.google.com", 
-    		description:"Popular search engine.", 
-    		createdOn:new Date(),
-			votes : 0,
-			comments : []
-    	});
-    }
-  });
-
-  Websites.allow({
-	insert: function (userId, doc) {
-		if (Meteor.user()) { // user is logged in ...
-			if (doc.url.length > 0 && doc.description.length > 0 && doc.title.length > 0) { // simple validation ( should check string formats )
-				console.log("Valid site - will add website to collection");
-				return true;
-			} else {
-				console.log("Site url, title or description are empty");
-				return  false;
-			}
-		} else {
-			console.log("User is not logged in");
-			return false;
-		}
-	},
-	update : function (userId ,doc) {
-		if(Meteor.user()){ // user is logged in
-			console.log("Allowing website update");
-			return true;
-		}
-	} 
-  });
-}
