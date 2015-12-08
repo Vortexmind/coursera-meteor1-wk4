@@ -41,6 +41,7 @@
 
 <template name="website_comment_form">
 <div class="container">
+<h2>Add a comment</h2>
 <form class="js-add-website-comment">
   <div class="form-group">
     <label for="website_comment">Your comment</label>
@@ -109,18 +110,19 @@
 
 {{ > website_comment_form }}
 
+<div class="container">
+<h3>Comments</h3>
 {{#each comments}}
 	{{> comment}}
 {{/each}}
+</div>
 </template>
 
 <template name="comment">
-<div class="container">
 <blockquote>
   <p>{{comment}}</p>
   <footer>By: {{author}} <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{formatDate createdOn}}</footer>
 </blockquote>
-</div>
 </template>
 
 <!-- template that displays individual website entries -->
