@@ -1,5 +1,10 @@
 // start up function that creates entries in the Websites databases.
 Meteor.startup(function () {
+
+// Add a search index on title
+Websites._ensureIndex({
+    "title": "text"
+});
 // code to run on server at startup
 if (!Websites.findOne()){
 	console.log("No websites yet. Creating starter data.");
@@ -65,5 +70,17 @@ Meteor.methods({
 	scrapeSite: function (url) {
 		return Scrape.website(url);
 	}
+});
+
+Meteor.publish("filteredWebsites", function(searchFilter) {
+
+	if (searchFilter) {
+		console.log('Searching with search filter');
+		return Websites.find({ $text: { $search: searchFilter } },{sort: {votes : -1}});
+	} else {
+		console.log('Searching without search filter');
+		return Websites.find({},{sort: {votes : -1}});	
+	}
+
 });
 

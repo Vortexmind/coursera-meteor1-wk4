@@ -1,3 +1,5 @@
+Session.set('searchFilter',undefined);
+
 Router.route('/', function () {
 	this.layout('ApplicationLayout');
 	this.render('landing_page_content', { to : 'maincontent'});
@@ -22,7 +24,15 @@ Accounts.ui.config({
 // helper function that returns all available websites
 Template.website_list.helpers({
 	websites:function(){
-		return Websites.find({},{sort: {votes : -1}});
+
+	Meteor.subscribe("filteredWebsites", Session.get("searchFilter"));
+
+	if (Session.get("searchFilter")) {
+      return Websites.find({}, { sort: [["score", "desc"]] });
+    } else {
+      return Websites.find({});
+    }
+	
 	}
 });
 
@@ -123,4 +133,12 @@ Template.website_comment_form.events({
 		event.target.website_comment.value = ''; // clear form value
 		return false;// stop the form submit from reloading the page
 	}
+});
+
+Template.website_list.events({
+	"submit .js-filter-list":function(event){
+		Session.set('searchFilter',event.target.search_field.value);
+		return false;
+	}
+
 });
