@@ -1,4 +1,5 @@
 Session.set('searchFilter',undefined);
+Session.set('lastVotedTerm',undefined);
 
 Router.route('/', function () {
 	this.layout('ApplicationLayout');
@@ -25,14 +26,27 @@ Accounts.ui.config({
 Template.website_list.helpers({
 	websites:function(){
 
-	Meteor.subscribe("filteredWebsites", Session.get("searchFilter"));
+		Meteor.subscribe("filteredWebsites", Session.get("searchFilter"));
 
-	if (Session.get("searchFilter")) {
-      return Websites.find({}, { sort: [["score", "desc"]] });
-    } else {
-      return Websites.find({});
-    }
+		if (Session.get("searchFilter")) {
+		  return Websites.find({}, { sort: [["score", "desc"]] });
+		} else {
+		  return Websites.find({});
+		}
 	
+	}
+});
+
+Template.recommendations.helpers({
+	recommendations:function(){
+		Meteor.subscribe("recommendedWebsites", Session.get("lastVotedTerm"));
+
+		if (Session.get("lastVotedTerm")) {
+		  return Websites.find({}, { sort: [["score", "desc"]], limit:3 });
+		} else {
+		  return Websites.find({},{limit:3});
+		}
+
 	}
 });
 
@@ -51,11 +65,17 @@ Template.website_item.events({
 		// example of how you can access the id for the website in the database
 		// (this is the data context for the template)
 		var website_id = this._id;
+
+		Session.set('lastVotedTerm',this.title.split(' ')[0]);
+		console.log("Last voted term is " + Session.get('lastVotedTerm'));
+
 		console.log("Up voting website with id "+website_id);
 
 		Websites.update({_id : website_id },{
 			$inc :  { 'votes' : 1 }
 		});
+
+		$('#reccomendationsModal').modal('show');
 
 		return false;// prevent the button from reloading the page
 	},
