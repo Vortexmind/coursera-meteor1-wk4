@@ -66,7 +66,7 @@ Template.website_item.events({
 		// (this is the data context for the template)
 		var website_id = this._id;
 
-		Session.set('lastVotedTerm',this.title.split(' ')[0]);
+		Session.set('lastVotedTerm',this.title);
 		console.log("Last voted term is " + Session.get('lastVotedTerm'));
 
 		console.log("Up voting website with id "+website_id);

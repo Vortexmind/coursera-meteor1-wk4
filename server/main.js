@@ -3,7 +3,15 @@ Meteor.startup(function () {
 
 // Add a search index on title
 Websites._ensureIndex({
-    "title": "text"
+    "title": "text",
+    "description" : "text"
+},{
+	default_language: "english",
+	weights: {
+       title: 10,
+       description: 3
+     },
+     name: "WebsiteSearchIndex"
 });
 // code to run on server at startup
 if (!Websites.findOne()){
@@ -100,4 +108,3 @@ Meteor.publish("recommendedWebsites", function(lastVotedTerm) {
 	}
 
 });
-
