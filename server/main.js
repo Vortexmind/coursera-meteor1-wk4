@@ -77,7 +77,7 @@ Websites.allow({
 Meteor.methods({
 	scrapeSite: function (url) {
 		return Scrape.website(url);
-	}
+	},
 });
 
 Meteor.publish("filteredWebsites", function(searchFilter) {
@@ -100,6 +100,6 @@ Meteor.publish("filteredWebsites", function(searchFilter) {
 	} else {
 		console.log('Searching without search filter');
 		return Websites.find({});
-}
+	}
 
 });

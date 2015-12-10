@@ -37,8 +37,6 @@
 {{> website_form}}
 {{> website_list}}
 
-{{> recommendations}}
-
 </template>
 
 <template name="website_comment_form">
@@ -117,33 +115,6 @@
 <!-- you will be putting your up and down vote buttons in here! -->
 </template>
 
-<template name="recommendations">
-<!-- Modal -->
-<div id="reccomendationsModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Recommended content</h4>
-      </div>
-      <div class="modal-body">
-        <p>You may also like:</p>
-        <ul>
-		{{#each recommendations}}
-			<li><a href="{{url}}" target="_blank"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span> {{title}}</a> <a href="/website/{{_id}}"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> More Info</a></li>
-		{{/each}}
-        </ul>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-</template>
 
 <template name="website_detail">
 {{ > website_info }}

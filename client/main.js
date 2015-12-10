@@ -38,12 +38,6 @@ Template.website_list.helpers({
 	}
 });
 
-Template.recommendations.helpers({
-	recommendations:function(){
-		return  Websites.find({},{limit:3});
-	}
-});
-
 // Pretty dates using momentjs
 Template.registerHelper('formatDate', function(date) {
 	return moment(date).startOf('second').fromNow();
@@ -65,8 +59,6 @@ Template.website_item.events({
 		Websites.update({_id : website_id },{
 			$inc :  { 'votes' : 1 }
 		});
-
-		$('#reccomendationsModal').modal('show');
 
 		return false;// prevent the button from reloading the page
 	},
