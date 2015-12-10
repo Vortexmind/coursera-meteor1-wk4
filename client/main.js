@@ -1,5 +1,6 @@
 Session.set('searchFilter',undefined);
-Session.set('lastVotedTerm',undefined);
+
+Meteor.subscribe("filteredWebsites", Session.get("searchFilter"));
 
 Router.route('/', function () {
 	this.layout('ApplicationLayout');
@@ -26,27 +27,20 @@ Accounts.ui.config({
 Template.website_list.helpers({
 	websites:function(){
 
+		// Refresh subscription to use new search filter
 		Meteor.subscribe("filteredWebsites", Session.get("searchFilter"));
 
-		if (Session.get("searchFilter")) {
-		  return Websites.find({}, { sort: [["score", "desc"]] });
+		if (Session.get('searchFilter')) {
+			return Websites.find({},{ sort: [['score', 'desc']] } );
 		} else {
-		  return Websites.find({});
+			return Websites.find({},{sort: {votes : -1}});
 		}
-	
 	}
 });
 
 Template.recommendations.helpers({
 	recommendations:function(){
-		Meteor.subscribe("recommendedWebsites", Session.get("lastVotedTerm"));
-
-		if (Session.get("lastVotedTerm")) {
-		  return Websites.find({}, { sort: [["score", "desc"]], limit:3 });
-		} else {
-		  return Websites.find({},{limit:3});
-		}
-
+		return  Websites.find({},{limit:3});
 	}
 });
 
@@ -65,9 +59,6 @@ Template.website_item.events({
 		// example of how you can access the id for the website in the database
 		// (this is the data context for the template)
 		var website_id = this._id;
-
-		Session.set('lastVotedTerm',this.title);
-		console.log("Last voted term is " + Session.get('lastVotedTerm'));
 
 		console.log("Up voting website with id "+website_id);
 
@@ -94,12 +85,6 @@ Template.website_item.events({
 	}
 })
 
-Template.website_form.helpers({
-	"getInfoMsg":function() {
-		return Session.get('infoMsg');
-	}
-});
-
 Template.website_form.events({
 	"click .js-toggle-website-form":function(event){
 		$("#website_form").toggle('slow');
@@ -108,7 +93,6 @@ Template.website_form.events({
 
 		// here is an example of how to get the url out of the form:
 		var url = event.target.url.value;
-		console.log("The url they entered is: "+url);
 
 		Meteor.call("scrapeSite",url,function(err,result) {
 
@@ -156,9 +140,12 @@ Template.website_comment_form.events({
 });
 
 Template.website_list.events({
-	"submit .js-filter-list":function(event){
-		Session.set('searchFilter',event.target.search_field.value);
+	'keyup input.js-filter-search-input': _.debounce(function(event, template) {
+		event.preventDefault();
+		Session.set('searchFilter',event.target.value);
+		}, 300),
+	'submit .js-filter-list':function(event) {
+		event.preventDefault();
 		return false;
 	}
-
 });

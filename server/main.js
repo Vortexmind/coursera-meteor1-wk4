@@ -9,7 +9,7 @@ Websites._ensureIndex({
 	default_language: "english",
 	weights: {
        title: 10,
-       description: 3
+       description: 5
      },
      name: "WebsiteSearchIndex"
 });
@@ -84,27 +84,22 @@ Meteor.publish("filteredWebsites", function(searchFilter) {
 
 	if (searchFilter) {
 		console.log('Searching with search filter: ' + searchFilter);
-		return Websites.find({ $text: { $search: searchFilter } },{sort: {votes : -1}});
+		return Websites.find(
+			  { $text: {
+				  $search: searchFilter
+				}
+			  },
+			  {
+				fields: {
+				  score: {
+					$meta: 'textScore'
+				  }
+				}
+			  }
+		);
 	} else {
 		console.log('Searching without search filter');
-		return Websites.find({},{sort: {votes : -1}});	
-	}
-
-});
-
-Meteor.publish("recommendedWebsites", function(lastVotedTerm) {
-
-	if (lastVotedTerm) {
-		console.log('Searching last voted term: ' + lastVotedTerm);
-		return Websites.find(
-			{
-				$text: { $search: lastVotedTerm }
-			},{
-			fields: { score: { $meta: "textScore" } }, sort: { score: { $meta: "textScore" } }
-			})
-	} else {
-		console.log('Searching without last voted term');
 		return Websites.find({});
-	}
+}
 
 });
