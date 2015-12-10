@@ -2,7 +2,7 @@
 Meteor.startup(function () {
 
 // Add a search index on title
-/*Websites._ensureIndex({
+Websites._ensureIndex({
     "title": "text",
     "description" : "text"
 },{
@@ -13,7 +13,6 @@ Meteor.startup(function () {
      },
      name: "WebsiteSearchIndex"
 });
-*/
 // code to run on server at startup
 if (!Websites.findOne()){
 	console.log("No websites yet. Creating starter data.");
@@ -83,7 +82,7 @@ Meteor.methods({
 
 Meteor.publish("filteredWebsites", function(searchFilter) {
 
-	/*if (searchFilter) {
+	if (searchFilter) {
 		console.log('Searching with search filter: ' + searchFilter);
 		return Websites.find(
 			  { $text: {
@@ -98,9 +97,9 @@ Meteor.publish("filteredWebsites", function(searchFilter) {
 				}
 			  }
 		);
-	} else {*/
+	} else {
 		console.log('Searching without search filter');
 		return Websites.find({});
-	/*}*/
+	}
 
 });
